@@ -3,7 +3,7 @@ import trafaret as t
 from aiohttp import web
 from sqlalchemy import select
 
-from test_app.models.db import accounts, orders
+from test_app.models.db import accounts
 from test_app.handlers.schemas.user import USER_QUERY, USER_ADD
 
 
@@ -39,7 +39,7 @@ async def users(request):
                     'edited': str(line.accounts_date_edited),
                 })
             data.append(info)
-    return web.json_response(data)
+    return web.json_response({'success': True, 'data': data})
 
 
 async def create_user(request):
@@ -52,4 +52,4 @@ async def create_user(request):
         result = await connection.execute(accounts.insert().values(**info))
         user = await result.first()
 
-    return web.json_response({'id': user.id, 'success': True})
+    return web.json_response({'success': True, 'data': {'id': user.id}})

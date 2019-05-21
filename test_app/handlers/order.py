@@ -30,7 +30,7 @@ async def get_orders(request):
                     'date_edited': str(line.orders_date_edited),
                 })
             data.append(info)
-    return web.json_response(data)
+    return web.json_response({'success': True, 'data': data})
 
 
 async def create_order(request):
@@ -44,4 +44,4 @@ async def create_order(request):
         result = await connection.execute(accounts.insert().values(**info))
         user = await result.first()
 
-    return web.json_response({'id': user.id, 'success': True})
+    return web.json_response({'success': True, 'data': {'id': user.id}})
