@@ -34,14 +34,15 @@ async def get_orders(request):
 
 
 async def create_order(request):
+    user_id = request.match_info.get('user_id')
     try:
-        data = await request.post()
-        info = t.Int().check(data['account_id'])
+
+        info = t.Int().check(user_id)
     except t.dataerror.DataError as e:
         return web.json_response({'success': False, 'error': e.as_dict()})
 
     async with request.app.db.acquire() as connection:
-        result = await connection.execute(accounts.insert().values(**info))
+        result = await connection.execute(accounts.insert().values(**{'account_id': info}))
         user = await result.first()
 
     return web.json_response({'success': True, 'data': {'id': user.id}})
