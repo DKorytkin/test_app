@@ -10,9 +10,7 @@ from sqlalchemy import (
     Integer,
     String,
     DateTime,
-    UniqueConstraint,
 )
-from sqlalchemy.orm import relationship
 
 
 meta = MetaData()
@@ -40,12 +38,12 @@ accounts = Table(
 )
 
 
-order_to_product = Table(
-    'order_to_product', meta,
+carts = Table(
+    'carts', meta,
 
+    Column('id', Integer, primary_key=True),
     Column('order_id', Integer, ForeignKey('orders.id')),
     Column('product_id', Integer, ForeignKey('products.id')),
-    UniqueConstraint("order_id", "product_id")
 )
 
 
@@ -53,14 +51,9 @@ orders = Table(
     'orders', meta,
 
     Column('id', Integer, primary_key=True),
-    Column('date_created', DateTime, nullable=False),
-    Column('date_edited', DateTime, nullable=False),
-    Column(
-        'account_id',
-        Integer,
-        ForeignKey('accounts.id', ondelete='CASCADE')
-    ),
-    # Column('products', ForeignKey('order_to_product.id', ondelete='CASCADE')),
+    Column('date_created', DateTime, nullable=False, default=datetime.now),
+    Column('date_edited', DateTime, nullable=False, default=datetime.now),
+    Column('account_id', Integer, ForeignKey('accounts.id', ondelete='CASCADE')),
 )
 
 
@@ -70,6 +63,6 @@ products = Table(
     Column('id', Integer, primary_key=True),
     Column('name', String(200), nullable=False),
     Column('price', Integer, nullable=False),
-    Column('date_created', DateTime, nullable=False),
-    Column('date_edited', DateTime, nullable=False),
+    Column('date_created', DateTime, nullable=False, default=datetime.now),
+    Column('date_edited', DateTime, nullable=False, default=datetime.now),
 )
