@@ -1,6 +1,17 @@
 # test_app
 only for testing
 
+## commands:
+
+- tests
+```bash
+docker-compose run tests 
+```
+
+- app
+```bash
+docker-compose run --service-ports app
+```
 
 ## endpoints:
 
