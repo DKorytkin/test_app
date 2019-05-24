@@ -2,8 +2,7 @@ import pytest
 import trafaret as t
 
 from test_app.models.db import Role
-from tests.factory import AccountAdmin
-
+from tests import db
 
 SCHEMA = t.Dict({
     t.Key('success'): t.Bool(),
@@ -36,8 +35,8 @@ async def test_filter_all_user(client, params):
     SCHEMA.check(body)
 
 
-async def test_get_user(client, build_factory):
-    user_admin = await build_factory(AccountAdmin)
+async def test_get_user(client, create):
+    user_admin = await create(db.user_admin())
     response = await client.get(f'/users/{user_admin.id}')
     assert response.status == 200
     body = await response.json()

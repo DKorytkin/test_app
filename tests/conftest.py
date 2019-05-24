@@ -56,5 +56,17 @@ async def build_factory(db_engine):
 
 
 @pytest.fixture()
+async def create(db_engine):
+
+    async def build(db_instance):
+        async with db_engine.acquire() as connection:
+            result = await connection.execute(db_instance)
+            data = await result.first()
+            return data
+
+    return build
+
+
+@pytest.fixture()
 async def client(aiohttp_client):
     return await aiohttp_client(init)
