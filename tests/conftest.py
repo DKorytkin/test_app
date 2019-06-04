@@ -4,7 +4,7 @@ import pytest
 from aiopg.sa import create_engine
 
 from test_app.run import init
-from tests.factory import AccountAdmin, AccountManager, AccountUser
+from tests import db
 
 
 @pytest.fixture(scope='session')
@@ -38,9 +38,9 @@ async def cleanup_db(db_engine, cleanup_db_queries, init_db_queries):
     async with db_engine.acquire() as connection:
         await connection.execute(cleanup_db_queries)
         await connection.execute(init_db_queries)
-        await connection.execute(AccountAdmin.build())
-        await connection.execute(AccountManager.build())
-        await connection.execute(AccountUser.build())
+        await connection.execute(db.user_admin())
+        await connection.execute(db.user_manager())
+        await connection.execute(db.user())
 
 
 @pytest.fixture()
