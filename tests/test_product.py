@@ -2,7 +2,7 @@ from datetime import datetime
 
 import trafaret as t
 
-from tests.factory import Product
+from tests import db
 
 
 PRODUCT_SCHEMA = t.List(t.Dict({
@@ -34,8 +34,8 @@ async def test_add_product(client):
     assert body['data'] == {'id': 1}
 
 
-async def test_all_products(client, build_factory):
-    product = await build_factory(Product)
+async def test_all_products(client, create):
+    product = await create(db.product())
     response = await client.get('/products')
     assert response.status == 200
     body = await response.json()
@@ -43,8 +43,8 @@ async def test_all_products(client, build_factory):
     assert body['data'] == [{'id': product.id}]
 
 
-async def test_get_product(client, build_factory):
-    product = await build_factory(Product)
+async def test_get_product(client, create):
+    product = await create(db.product())
     response = await client.get(f'/products/{product.id}')
     assert response.status == 200
     body = await response.json()
